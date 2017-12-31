@@ -1,4 +1,4 @@
-package main
+package currency
 
 import (
 	"encoding/json"
@@ -9,21 +9,21 @@ import (
 	"time"
 )
 
-type foreignExchangeRatePoller struct {
+type poller struct {
 	rates  map[string]map[string]float64
 	stopCh chan bool
 	doneCh chan bool
 }
 
-func newPoller() foreignExchangeRatePoller {
-	return foreignExchangeRatePoller{
+func newPoller() poller {
+	return poller{
 		rates:  map[string]map[string]float64{},
 		stopCh: make(chan bool, 1),
 		doneCh: make(chan bool, 1),
 	}
 }
 
-func (p foreignExchangeRatePoller) start() {
+func (p poller) start() {
 	defer close(p.doneCh)
 	go func() {
 		for {
@@ -45,7 +45,7 @@ func (p foreignExchangeRatePoller) start() {
 	}()
 }
 
-func (p foreignExchangeRatePoller) stop() {
+func (p poller) stop() {
 	close(p.stopCh)
 	<-p.doneCh
 }
