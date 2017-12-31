@@ -4,10 +4,11 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 
 	"github.com/MiLk/feldt/currency"
+	"github.com/MiLk/feldt/timer"
 )
 
 type Module interface {
-	Start() error
+	Start(*tgbotapi.BotAPI) error
 	Stop()
 	ProcessMessage(update tgbotapi.Update) (tgbotapi.Chattable, error)
 	ProcessCallbackQuery(update tgbotapi.Update) (tgbotapi.Chattable, error)
@@ -15,11 +16,12 @@ type Module interface {
 
 var moduleList = []Module{
 	currency.New(),
+	timer.New(),
 }
 
-func StartAllModules() error {
+func StartAllModules(api *tgbotapi.BotAPI) error {
 	for _, p := range moduleList {
-		if err := p.Start(); err != nil {
+		if err := p.Start(api); err != nil {
 			return err
 		}
 	}

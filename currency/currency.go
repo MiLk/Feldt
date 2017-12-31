@@ -2,6 +2,8 @@ package currency
 
 import (
 	"regexp"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 type currencyModule struct {
@@ -14,7 +16,7 @@ func New() *currencyModule {
 	}
 }
 
-func (p currencyModule) Start() error {
+func (p currencyModule) Start(*tgbotapi.BotAPI) error {
 	p.poller.start()
 	return nil
 }

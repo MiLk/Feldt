@@ -26,7 +26,7 @@ func mainE() error {
 
 	log.Printf("Authorized on account @%s (%s)", bot.Self.UserName, bot.Self.FirstName)
 
-	if err := StartAllModules(); err != nil {
+	if err := StartAllModules(bot); err != nil {
 		return err
 	}
 	defer StopAllModules()
