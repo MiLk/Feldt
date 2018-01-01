@@ -1,13 +1,11 @@
 package timer
 
 import (
-	"regexp"
-
+	"errors"
 	"fmt"
-
-	"time"
-
+	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -47,9 +45,13 @@ func (p timerModule) ProcessMessage(update tgbotapi.Update) (tgbotapi.Chattable,
 		return nil, nil
 	}
 
+	if len(update.Message.Text) <= command.Offset+command.Length+1 {
+		return nil, errors.New("no parameters specified")
+	}
+
 	m := timerRegexp.FindStringSubmatch(update.Message.Text[command.Offset+command.Length+1:])
 	if len(m) == 0 {
-		return nil, nil
+		return nil, errors.New("invalid parameters")
 	}
 
 	durations := durationRegexp.FindAllStringSubmatch(m[1], -1)
@@ -63,7 +65,7 @@ func (p timerModule) ProcessMessage(update tgbotapi.Update) (tgbotapi.Chattable,
 		duration += unitMap[d[2]] * time.Duration(di)
 	}
 
-	t, err := p.storage.add(update.Message.Chat.ID, duration, m[2])
+	t, err := p.storage.add(update.Message.Chat.ID, update.Message.From.UserName, duration, m[2])
 	if err != nil {
 		return nil, err
 	}

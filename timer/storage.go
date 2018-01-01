@@ -10,6 +10,7 @@ import (
 
 type timer struct {
 	chatID   int64
+	from     string
 	start    time.Time
 	end      time.Time
 	duration time.Duration
@@ -37,10 +38,11 @@ func newStorage() storage {
 	}
 }
 
-func (s storage) add(chatID int64, d time.Duration, r string) (*timer, error) {
+func (s storage) add(chatID int64, from string, d time.Duration, r string) (*timer, error) {
 	n := time.Now()
 	t := timer{
 		chatID:   chatID,
+		from:     from,
 		start:    n,
 		end:      n.Add(d),
 		duration: d,
@@ -87,7 +89,7 @@ func (s storage) start(bot *tgbotapi.BotAPI) {
 					}
 					b.Send(tgbotapi.NewMessage(
 						evt.chatID,
-						fmt.Sprintf("ding! %s", evt.reason),
+						fmt.Sprintf("@%s ding! %s", evt.from, evt.reason),
 					))
 					delete(s.data, k)
 					toDelete++
