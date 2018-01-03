@@ -36,7 +36,7 @@ func (p timerModule) ProcessMessage(update tgbotapi.Update) (tgbotapi.Chattable,
 		if e.Type != "bot_command" {
 			continue
 		}
-		entityText := update.Message.Text[e.Offset:e.Length]
+		entityText := update.Message.Text[e.Offset : e.Offset+e.Length]
 		if entityText == "/t" || entityText == "/timer" {
 			command = &e
 		}
