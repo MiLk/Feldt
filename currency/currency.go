@@ -33,7 +33,7 @@ var symbols = map[string]string{
 	"$":   "USD",
 	"‎R$": "BRL",
 }
-var currencyRegexp = regexp.MustCompile(`(?i)(?:\s|^)(\d+)\s*(€|EUR|¥|円|JPY|\$|USD|‎R\$|BRL)(?:\s|,|\?|$)`)
+var currencyRegexp = regexp.MustCompile(`(?i)(?:\s|^)(\d+)\s*(EUR|JPY|USD|BRL)(?:\s|,|\?|$)`)
 
 func isLetter(s string) bool {
 	for _, r := range s {
